@@ -1,0 +1,27 @@
+{
+  "name": "@qpoint/router",
+  "version": "0.1.0",
+  "description": "Qpoint ",
+  "author": "Tyler Flint <tyler@qpoint.io>",
+  "homepage": "https://qpoint.io",
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "koa-compose": "^4.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.5.1",
+    "@types/node": "^17.0.25",
+    "typescript": "^4.6.3"
+  }
+}
