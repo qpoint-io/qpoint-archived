@@ -8,7 +8,7 @@ Designed to run within [worker runtimes](https://workers.js.org/), a qpoint rout
 
 ## Example
 
-```js
+```ts
 import Router from '@qpoint/router'
 import proxy from '@qpoint/proxy'
 import maskUrls from '@qpoint/mask-urls'
@@ -36,13 +36,13 @@ export default new Router()
 Adapters are middleware functions to be executed in a chain, each potentially modifying the request/response until finally returning the response.
 
 Example: Reject the request (at the edge) if no auth is provided
-```js
-router.use((context: Context, next: Function) => {
+```ts
+router.use((ctx: Context, next: Function) => {
   
   // check for the Authorization header
-  if (!context.request.headers.has("Authorization")) {
+  if (!ctx.request.headers.has("Authorization")) {
     // set the response to unauthorized
-    context.response = new Response(null, { status: 401 });
+    ctx.response = new Response(null, { status: 401 });
 
     // return without calling next() to terminate the chain
     return
@@ -54,4 +54,20 @@ router.use((context: Context, next: Function) => {
 
 ```
 
+## Context, Request and Response
+
+Each adapter receives a Qpoint [Context](https://github.com/qpoint-io/qpoint/blob/main/src/context.ts) object that wraps an incoming request and the corresponding response. `ctx` is often used as the parameter name for the context object.
+
+```ts
+router.use(async (ctx: Context, next: Function) => { await next(); });
+```
+
+After each of the adapters have run, the response as set on the context will be returned. 
+
+
+### Proxies and Load Balancers
+
+A very common case for Qpoint is building intelligent proxies and load balancers, and since the original Request object cannot be modified, the `proxy` is a copy of the original request that can be `fetch`ed by a proxy or load-balancer adapter. 
+
+In such a scenario, adapters that need to modify the request before a proxy fetch occurs will sequencially modify or replace the `proxy` instance as the chain progresses.
 

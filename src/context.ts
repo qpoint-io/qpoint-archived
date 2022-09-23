@@ -1,56 +1,63 @@
-// A context object that will be provided to each middleware
+// The Context is a wrapper around the request/response
 // 
-// The general idea is that the "proxy" request is either manipulated
-// or replaced with each middleware until finally one of the middleware
-// fetches the request and sets the response, at which point
-// the "response" is then manipulated and transformed by the middleware
-// until all middleware has completed. Finally, the router will return
-// what is left of the final response.
+// Each adapter (middleware function) will be passed an instance
+// of the context, wrapped around the request and response as an argument.
+// 
+// After each of the adapters have run, the response as set on the
+// context will be returned. 
+// 
+// A very common case for Qpoint is building intelligent proxies and load balancers,
+// and since the original Request object cannot be modified, the `proxy` is a copy
+// of the original request that can be `fetch`ed by a proxy or load-balancer adapter.
+// In such a scenario, adapters that need to modify the request before a proxy fetch
+// occurs will sequencially modify or replace the `proxy` instance as the chain progresses.
 export class Context {
-  state       : Object
-  event       : FetchEvent
-  request     : Request
-  requestId   : string
-  url         : string
-  proxy       : Request
-  response    : Response
-  duration    : number
-  htmlRewriter: HTMLRewriter
+  state       : Object        // generic object for sharing data between adapters
+  event       : FetchEvent    // the worker runtime fetch event
+  request     : Request       // the initial request (read-only)
+  requestId   : string        // a unique id for this request
+  url         : string        // the URL object from the initial request
+  proxy       : Request       // a copy of the original request, modified by the adapters
+  response    : Response      // the final response to send back
+  duration    : number        // the total duration of time for the request/response
+  htmlRewriter: HTMLRewriter  // a rewriter instance for modifying html as a stream
 
   constructor(event: FetchEvent, state: Object = {}) {
-    // A generic state object for sharing data between adapters
+    // allow the router init to set the initial state
     this.state = state;
 
-    // the fetch event
+    // set the event from the worker event
     this.event = event;
 
-    // the initial edge request
+    // set the request from the event
     this.request = event.request;
 
-    // set the request ID
+    // create a random request ID
     this.requestId = generateId(24);
 
     // set the url initially to that of the request
     this.url = event.request.url;
 
-    // the proxy request (a copy, initially, which will presumable be modified heavily)
+    // create a copy of the initial request, which will presumably be modified heavily
     this.proxy = new Request(this.request);
 
-    // the final response
+    // the final response, set to a 404 initially
     this.response = new Response(null, { status: 404 });
 
-    // the duration of the proxy request/response
+    // set the duration to 0 to start
     this.duration = 0;
 
-    // an html rewriter
+    // initialize an html rewriter instance
     this.htmlRewriter = new HTMLRewriter();
   }
 
+  // Any async work that should not hold-up the response
   waitUntil(fn: Promise<any>) {
     this.event.waitUntil(fn);
   }
 }
 
+// Generate a random id
 const generateId = (length: number = 10) => {
   // declare available seeds
   const seed = 'abcdefghijklmnopqrstuvwxyz0123456789';
