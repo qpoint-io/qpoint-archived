@@ -1,7 +1,7 @@
 {
   "name": "@qpoint/router",
-  "version": "0.1.0",
-  "description": "Qpoint ",
+  "version": "0.1.1",
+  "description": "Qpoint - an intelligent edge router framework",
   "author": "Tyler Flint <tyler@qpoint.io>",
   "homepage": "https://qpoint.io",
   "license": "Apache-2.0",
@@ -14,7 +14,8 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "release": "npm publish --access=public"
   },
   "dependencies": {
     "koa-compose": "^4.1.0"
