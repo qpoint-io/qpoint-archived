@@ -1,0 +1,7 @@
+{
+  "deno.enablePaths": [
+    "./examples/deno"
+  ],
+  "deno.unstable": true,
+  "deno.importMap": "./examples/deno/import_map.json"
+}

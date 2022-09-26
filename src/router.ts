@@ -2,7 +2,7 @@ import compose from 'koa-compose'
 import { Context } from './context'
 
 // The Qpoint router: a middleware pattern for handling requests
-export class Router {
+export class Router<Env = any> {
   state: Object
   stack: Function[]
 
@@ -24,9 +24,13 @@ export class Router {
   }
 
   // Respond to the fetch event
-  async fetch(event: FetchEvent) {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext
+  ): Promise<Response> {
     // initialize a context
-    const context = new Context(event, this.state);
+    const context = new Context<Env>(request, env, ctx, this.state);
 
     // compose the request middlewares
     const run = compose(this.stack);
@@ -36,12 +40,5 @@ export class Router {
 
     // return the response
     return context.response;
-  }
-
-  // Legacy, this pattern has been deprecated. Expose fetch directly instead
-  listen() {
-    addEventListener("fetch", event => {
-      event.respondWith(this.fetch(event));
-    })
   }
 }

@@ -11,32 +11,36 @@
 // of the original request that can be `fetch`ed by a proxy or load-balancer adapter.
 // In such a scenario, adapters that need to modify the request before a proxy fetch
 // occurs will sequencially modify or replace the `proxy` instance as the chain progresses.
-export class Context {
-  state       : Object        // generic object for sharing data between adapters
-  event       : FetchEvent    // the worker runtime fetch event
-  request     : Request       // the initial request (read-only)
-  requestId   : string        // a unique id for this request
-  url         : string        // the URL object from the initial request
-  proxy       : Request       // a copy of the original request, modified by the adapters
-  response    : Response      // the final response to send back
-  duration    : number        // the total duration of time for the request/response
-  htmlRewriter: HTMLRewriter  // a rewriter instance for modifying html as a stream
+export class Context<Env = any> {
+  request     : Request           // the initial request (read-only)
+  env         : Env               // the custom worker env & bindings
+  ctx         : ExecutionContext  // execution context of the event
+  state       : Object            // generic object for sharing data between adapters
+  requestId   : string            // a unique id for this request
+  url         : string            // the URL object from the initial request
+  proxy       : Request           // a copy of the original request, modified by the adapters
+  response    : Response          // the final response to send back
+  duration    : number            // the total duration of time for the request/response
+  htmlRewriter: HTMLRewriter      // a rewriter instance for modifying html as a stream
 
-  constructor(event: FetchEvent, state: Object = {}) {
+  constructor(request: Request, env: Env, ctx: ExecutionContext, state: Object = {}) {
+    // set the request from the event
+    this.request = request;
+
+    // set the env from the event
+    this.env = env;
+
+    // set the execution context of the runtime
+    this.ctx = ctx;
+
     // allow the router init to set the initial state
     this.state = state;
-
-    // set the event from the worker event
-    this.event = event;
-
-    // set the request from the event
-    this.request = event.request;
 
     // create a random request ID
     this.requestId = generateId(24);
 
     // set the url initially to that of the request
-    this.url = event.request.url;
+    this.url = request.url;
 
     // create a copy of the initial request, which will presumably be modified heavily
     this.proxy = new Request(this.request);
@@ -53,7 +57,7 @@ export class Context {
 
   // Any async work that should not hold-up the response
   waitUntil(fn: Promise<any>) {
-    this.event.waitUntil(fn);
+    this.ctx.waitUntil(fn);
   }
 }
 

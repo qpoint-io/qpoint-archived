@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "$std/": "https://deno.land/std@0.150.0/",
+    "@qpoint/router": "https://esm.sh/@qpoint/router@0.1.3?bundle"
+  }
+}
