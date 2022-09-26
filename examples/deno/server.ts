@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.157.0/http/server.ts";
 import worker from "../hello/src/index.ts";
-import "https://deno.land/x/html_rewriter@v0.1.0-pre.17/polyfill-base64.ts"
+import "https://deno.land/x/html_rewriter@v0.1.0-pre.17/polyfill-base64.ts";
 
 // provide any bindings/emulation
 const bindings = {}
@@ -12,6 +12,6 @@ const ctx = {
   passThroughOnException: () => {}
 }
 
-serve((req: Request) => {
-  return worker.fetch(req, bindings, ctx)
-});
+serve((req: Request) => (
+  worker.fetch(req, bindings, ctx)
+));
