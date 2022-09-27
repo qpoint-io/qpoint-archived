@@ -1,5 +1,5 @@
 
-export const mimeCategory = (contentType: string): string => {
+export function mimeCategory(contentType: string): string {
   // truncate the content/type to just the type, not encoding etc
   contentType = contentType.split(';')[0];
 
@@ -24,26 +24,26 @@ export const mimeCategory = (contentType: string): string => {
   return 'other';
 }
 
-const isApp = (contentType: string) => (
-  ['text/html', 'application/json', 'application/grpc', 'text/xml', 'application/xml'].includes(contentType)
-)
+function isApp(contentType: string) {
+  return ['text/html', 'application/json', 'application/grpc', 'text/xml', 'application/xml'].includes(contentType);
+}
 
-const isCss = (contentType: string) => (
-  contentType == 'text/css'
-)
+function isCss(contentType: string) {
+  return contentType == 'text/css';
+}
 
-const isJs = (contentType: string) => (
-  contentType == 'text/javascript'
-)
+function isJs(contentType: string) {
+  return contentType == 'text/javascript';
+}
 
-const isFont = (contentType: string) => (
-  contentType.startsWith('font')
-)
+function isFont(contentType: string) {
+  return contentType.startsWith('font');
+}
 
-const isImage = (contentType: string) => (
-  contentType.startsWith('image')
-)
+function isImage(contentType: string) {
+  return contentType.startsWith('image');
+}
 
-const isMedia = (contentType: string) => (
-  contentType.startsWith('audio') || contentType.startsWith('video')
-)
+function isMedia(contentType: string) {
+  return contentType.startsWith('audio') || contentType.startsWith('video');
+}

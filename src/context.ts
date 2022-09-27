@@ -62,7 +62,7 @@ export class Context<Env = any> {
 }
 
 // Generate a random id
-const generateId = (length: number = 10) => {
+function generateId(length: number = 10) {
   // declare available seeds
   const seed = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
