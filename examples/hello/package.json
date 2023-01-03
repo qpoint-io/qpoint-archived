@@ -2,10 +2,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "deploy": "wrangler publish src/index.ts",
-    "dev": "wrangler dev src/index.ts --local",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start-stackblitz": "WRANGLER_SEND_METRICS=false wrangler dev src/index.ts --local"
+    "local": "wrangler dev src/index.ts --local"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.0.0",
