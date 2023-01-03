@@ -25,7 +25,7 @@ export function mimeCategory(contentType: string): string {
 }
 
 function isApp(contentType: string) {
-  return ['text/html', 'application/json', 'application/grpc', 'text/xml', 'application/xml'].includes(contentType);
+  return ['text/html', 'application/json', 'application/grpc', 'text/xml', 'application/xml', 'text/plain'].includes(contentType);
 }
 
 function isCss(contentType: string) {
