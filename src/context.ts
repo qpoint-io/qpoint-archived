@@ -21,6 +21,7 @@ export class Context<Env = any> {
   proxy       : Request           // a copy of the original request, modified by the adapters
   response    : Response          // the final response to send back
   duration    : number            // the total duration of time for the request/response
+  startedAt   : number            // the epoch timestamp for when this context was started
   htmlRewriter: HTMLRewriter      // a rewriter instance for modifying html as a stream
 
   constructor(request: Request, env: Env, ctx: ExecutionContext, state: Object = {}) {
@@ -53,7 +54,18 @@ export class Context<Env = any> {
 
     // initialize an html rewriter instance
     this.htmlRewriter = new HTMLRewriter();
+
+    // set a timestamp for when we started
+    this.startedAt = Date.now()
   }
+
+  // A few shortcut getters/setters
+  public get req() { return this.request }
+  public set req(req: Request) { this.request = req }
+  public get pxy() { return this.proxy }
+  public set pxy(pxy: Request) { this.pxy = pxy }
+  public get res() { return this.response }
+  public set res(res: Response) { this.response = res }
 
   // Any async work that should not hold-up the response
   waitUntil(fn: Promise<any>) {
