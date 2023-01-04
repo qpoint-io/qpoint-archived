@@ -29,16 +29,24 @@ export class Router<Env = any> {
     env: Env,
     ctx: ExecutionContext
   ): Promise<Response> {
-    // initialize a context
-    const context = new Context<Env>(request, env, ctx, this.state);
+    try {
+      // initialize a context
+      const context = new Context<Env>(request, env, ctx, this.state);
 
-    // compose the request middlewares
-    const run = compose(this.stack);
+      // compose the request middlewares
+      const run = compose(this.stack);
+    
+      // run the stack
+      await run(context);
 
-    // run the stack
-    await run(context);
+      // return the response
+      return context.response;
+      
+    } catch (error) {
+      console.error(`Unhandled stack error: ${error.message}`)
+      console.error(error.stack)
 
-    // return the response
-    return context.response;
+      return new Response('Internal Qpoint Error', { status: 500 })
+    }
   }
 }

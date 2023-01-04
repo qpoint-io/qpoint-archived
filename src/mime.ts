@@ -1,7 +1,12 @@
 
-export function mimeCategory(contentType: string): string {
+export function mimeCategory(contentType: string = ''): string {
+  // ensure we're not undefined or null somehow
+  if (!contentType || contentType == null || contentType == undefined)
+    contentType = ''
+
   // truncate the content/type to just the type, not encoding etc
-  contentType = contentType.split(';')[0];
+  if (contentType.includes(';'))
+    contentType = contentType.split(';')[0];
 
   if (isApp(contentType))
     return 'app';

@@ -1,6 +1,6 @@
 {
   "name": "@qpoint/router",
-  "version": "0.1.8",
+  "version": "0.1.11",
   "description": "Qpoint - an intelligent edge router framework",
   "author": "Tyler Flint <tyler@qpoint.io>",
   "homepage": "https://qpoint.io",
