@@ -16,6 +16,7 @@ export class Context<Env = any> {
   env         : Env               // the custom worker env & bindings
   ctx         : ExecutionContext  // execution context of the event
   state       : Object            // generic object for sharing data between adapters
+  tags        : string[]          // adapters can extract context and add tags for downstream adapters
   requestId   : string            // a unique id for this request
   url         : string            // the URL object from the initial request
   proxy       : Request           // a copy of the original request, modified by the adapters
@@ -58,6 +59,9 @@ export class Context<Env = any> {
 
     // allow the router init to set the initial state
     this.state = state;
+
+    // start with an empty list of tags
+    this.tags = []
 
     // create a random request ID
     this.requestId = generateId(24);
