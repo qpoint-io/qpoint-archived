@@ -12,18 +12,18 @@
 // In such a scenario, adapters that need to modify the request before a proxy fetch
 // occurs will sequencially modify or replace the `proxy` instance as the chain progresses.
 export class Context<Env = any> {
-  request     : Request           // the initial request (read-only)
-  env         : Env               // the custom worker env & bindings
-  ctx         : ExecutionContext  // execution context of the event
-  state       : Object            // generic object for sharing data between adapters
-  tags        : string[]          // adapters can extract context and add tags for downstream adapters
-  requestId   : string            // a unique id for this request
-  url         : string            // the URL object from the initial request
-  proxy       : Request           // a copy of the original request, modified by the adapters
-  response    : Response          // the final response to send back
-  duration    : number            // the total duration of time for the request/response
-  startedAt   : number            // the epoch timestamp for when this context was started
-  htmlRewriter: HTMLRewriter      // a rewriter instance for modifying html as a stream
+  request     : Request                 // the initial request (read-only)
+  env         : Env                     // the custom worker env & bindings
+  ctx         : ExecutionContext        // execution context of the event
+  state       : { [key: string]: any }  // generic object for sharing data between adapters
+  tags        : string[]                // adapters can extract context and add tags for downstream adapters
+  requestId   : string                  // a unique id for this request
+  url         : string                  // the URL object from the initial request
+  proxy       : Request                 // a copy of the original request, modified by the adapters
+  response    : Response                // the final response to send back
+  duration    : number                  // the total duration of time for the request/response
+  startedAt   : number                  // the epoch timestamp for when this context was started
+  htmlRewriter: HTMLRewriter            // a rewriter instance for modifying html as a stream
 
   // Logging at the edge has the potential to overwhelm collection sinks
   // and consume bandwidth for any external logging solutions that will
