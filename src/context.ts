@@ -70,7 +70,7 @@ export class Context<Env = any> {
     this.url = request.url;
 
     // create a copy of the initial request, which will presumably be modified heavily
-    this.proxy = new Request(this.request);
+    this.proxy = request.clone();
 
     // the final response, set to a 404 initially
     this.response = new Response(null, { status: 404 });
